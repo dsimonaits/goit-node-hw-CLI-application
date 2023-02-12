@@ -23,6 +23,17 @@ async function getContactById(contactId) {
   });
 }
 
+async function addContact(name, email, phone) {
+  const newContact = { id: nodeId(), name, email, phone };
+  await getContacts().then(
+    (contacts) =>
+      fs.writeFile(contactsPath, JSON.stringify([...contacts, newContact])),
+    { encoding: "utf8" }
+  );
+
+  console.table(await getContacts());
+}
+
 async function removeContact(contactId) {
   await getContacts().then(
     (contacts) =>
@@ -30,17 +41,6 @@ async function removeContact(contactId) {
         contactsPath,
         JSON.stringify(contacts.filter((contact) => contact.id !== contactId))
       ),
-    { encoding: "utf8" }
-  );
-
-  console.table(await getContacts());
-}
-
-async function addContact(name, email, phone) {
-  const newContact = { id: nodeId(), name, email, phone };
-  await getContacts().then(
-    (contacts) =>
-      fs.writeFile(contactsPath, JSON.stringify([...contacts, newContact])),
     { encoding: "utf8" }
   );
 
