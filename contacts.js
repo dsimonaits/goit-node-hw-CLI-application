@@ -53,11 +53,16 @@ async function removeContact(contactId) {
   try {
     const contacts = await getContacts();
 
-    await fs.writeFile(
-      contactsPath,
-      JSON.stringify(contacts.filter((contact) => contact.id !== contactId))
-    ),
-      { encoding: "utf8" };
+    if (contacts.some(({ id }) => id === contactId)) {
+      console.table(contacts.find(({ id }) => id === contactId));
+      await fs.writeFile(
+        contactsPath,
+        JSON.stringify(contacts.filter((contact) => contact.id !== contactId))
+      ),
+        { encoding: "utf8" };
+    } else {
+      console.log("Contact not found");
+    }
   } catch (error) {
     console.log(error);
   } finally {
